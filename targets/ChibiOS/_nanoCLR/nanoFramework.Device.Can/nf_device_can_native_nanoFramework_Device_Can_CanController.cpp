@@ -456,20 +456,24 @@ HRESULT Library_nf_device_can_native_nanoFramework_Device_Can_CanController::Get
     {
         // declare the device selector string whose max size is "SPI1,SPI2,SPI3,SPI4,SPI5,SPI6," + terminator and init
         // with the terminator
-        char deviceSelectorString[30 + 1] = {0};
+        static char deviceSelectorString[] =
 
 #if defined(STM32_CAN_USE_CAN1) && (STM32_CAN_USE_CAN1 == TRUE)
-        strcat(deviceSelectorString, "CAN1,");
+            "CAN1,"
 #endif
 #if (STM32_CAN_USE_CAN2) && (STM32_CAN_USE_CAN2 == TRUE)
-        strcat(deviceSelectorString, "CAN2,");
+            "CAN2,"
 #endif
 #if (STM32_CAN_USE_CAN3) && (STM32_CAN_USE_CAN3 == TRUE)
-        strcat(deviceSelectorString, "CAN3,");
+            "CAN3,"
 #endif
+            ;
 
         // replace the last comma with a terminator
-        deviceSelectorString[hal_strlen_s(deviceSelectorString) - 1] = '\0';
+        if (deviceSelectorString[hal_strlen_s(deviceSelectorString) - 1] == ',')
+        {
+            deviceSelectorString[hal_strlen_s(deviceSelectorString) - 1] = '\0';
+        }
 
         // because the caller is expecting a result to be returned
         // we need set a return result in the stack argument using the appropriate SetResult according to the variable

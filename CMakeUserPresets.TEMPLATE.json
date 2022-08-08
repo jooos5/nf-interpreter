@@ -42,7 +42,9 @@
                 "TI_SL_CC32xx_SDK_SOURCE": "/sources/SimpleLinkCC32",
                 "TI_SL_CC13xx_26xx_SDK_SOURCE": "/sources/SimpleLinkCC13",
                 "TI_XDCTOOLS_SOURCE": "/usr/local/bin/titools",
-                "TI_SYSCONFIG_SOURCE": "/sources/TI_SysConfig"
+                "TI_SYSCONFIG_SOURCE": "/sources/TI_SysConfig",
+                "AZURERTOS_SOURCE_FOLDER": "/sources/AzureRTOS",
+                "NETXDUO_SOURCE_FOLDER": "/sources/NextDuo"
             }
         },
         {
@@ -57,7 +59,12 @@
                 "NF_WP_TRACE_HEADERS": "OFF",
                 "NF_WP_TRACE_STATE": "OFF",
                 "NF_WP_TRACE_NODATA": "OFF",
-                "NF_WP_TRACE_ALL": "OFF"
+                "NF_WP_TRACE_ALL": "OFF",
+                "NF_WP_IMPLEMENTS_CRC32": "OFF",
+                "NF_PLATFORM_NO_CLR_TRACE": "OFF",
+                "NF_CLR_NO_IL_INLINE": "OFF",
+                "NF_FEATURE_WATCHDOG": "ON",
+                "SWO_OUTPUT": "OFF"
             }
         },
         {
@@ -107,6 +114,21 @@
                 "user-local-tools",
                 "user-prefs",
                 "ST_STM32F769I_DISCOVERY_preset"
+            ],
+            "cacheVariables": {
+                "TARGET_BOARD": {
+                    "type": "STRING",
+                    "value": "${presetName}"
+                },
+                "NF_INTEROP_ASSEMBLIES": null
+            }
+        },
+        {
+            "name": "ST_B_L475E_IOT01A",
+            "inherits": [
+                "user-local-tools",
+                "user-prefs",
+                "ST_B_L475E_IOT01A_preset"
             ],
             "cacheVariables": {
                 "TARGET_BOARD": {
@@ -278,6 +300,18 @@
                 "user-local-tools",
                 "user-prefs",
                 "ESP32_OLIMEX_preset"
+            ],
+            "cacheVariables": {
+                "TARGET_NAME": "${presetName}",
+                "NF_INTEROP_ASSEMBLIES": null
+            }
+        },
+        {
+            "name": "LilygoTWatch2020",
+            "inherits": [
+                "user-local-tools",
+                "user-prefs",
+                "LilygoTWatch2020_preset"
             ],
             "cacheVariables": {
                 "TARGET_NAME": "${presetName}",
@@ -585,6 +619,11 @@
             "configurePreset": "ST_STM32F769I_DISCOVERY"
         },
         {
+            "name": "ST_B_L475E_IOT01A",
+            "displayName": "ST_B_L475E_IOT01A",
+            "configurePreset": "ST_B_L475E_IOT01A"
+        },
+        {
             "name": "ESP32_PSRAM_REV0",
             "displayName": "ESP32_PSRAM_REV0",
             "configurePreset": "ESP32_PSRAM_REV0"
@@ -653,6 +692,11 @@
             "name": "ESP32_OLIMEX",
             "displayName": "ESP32_OLIMEX",
             "configurePreset": "ESP32_OLIMEX"
+        },
+        {
+            "name": "LilygoTWatch2020",
+            "displayName": "LilygoTWatch2020",
+            "configurePreset": "LilygoTWatch2020"
         },
         {
             "name": "M5StickC",
