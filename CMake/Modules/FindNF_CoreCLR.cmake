@@ -135,7 +135,6 @@ set(NF_CoreCLR_SRCS
     
     # Core stubs
     RPC_stub.cpp
-    BinaryFormatter_stub.cpp
 
     # CLR stubs
     Debugger_stub.cpp
@@ -181,6 +180,18 @@ if(NF_FEATURE_SUPPORT_REFLECTION)
     list(APPEND NF_CoreCLR_SRCS corlib_native_System_Reflection_RuntimeMethodInfo.cpp)
     list(APPEND NF_CoreCLR_SRCS corlib_native_System_RuntimeType.cpp)
     list(APPEND NF_CoreCLR_SRCS corlib_native_System_Type.cpp)
+
+    # should we include binary serialization support?
+    if(NF_FEATURE_BINARY_SERIALIZATION)
+        list(APPEND NF_CoreCLR_SRCS BinaryFormatter.cpp)    
+    else()
+        # binary serialization stubs because we're not supporting reflection
+        list(APPEND NF_CoreCLR_SRCS BinaryFormatter_stub.cpp)    
+    endif()
+
+else()
+    # binary serialization stubs because we're not supporting reflection
+    list(APPEND NF_CoreCLR_SRCS BinaryFormatter_stub.cpp)    
 endif()
 
 # include Collection support files depending on build option
@@ -201,6 +212,11 @@ if(NF_FEATURE_HAS_CONFIG_BLOCK)
 else()
     # feature disabled, stubs only
     list(APPEND NF_CoreCLR_SRCS nanoHAL_ConfigurationManager_stubs.c)
+endif()
+
+# include platform implementation for Runtime_Native_Rtc
+if(EXISTS ${BASE_PATH_FOR_CLASS_LIBRARIES_MODULES}/nanoFramework.Runtime.Native/nf_rt_native_nanoFramework_Runtime_Native_Rtc.cpp)
+    list(APPEND NF_CoreCLR_SRCS nf_rt_native_nanoFramework_Runtime_Native_Rtc.cpp)
 endif()
 
 foreach(SRC_FILE ${NF_CoreCLR_SRCS})
@@ -252,6 +268,9 @@ foreach(SRC_FILE ${NF_CoreCLR_SRCS})
             ${CMAKE_SOURCE_DIR}/src/PAL/AsyncProcCall
             ${CMAKE_SOURCE_DIR}/src/PAL/COM
             ${CMAKE_SOURCE_DIR}/src/PAL/Profiler
+
+            # platform specific implementations
+            ${BASE_PATH_FOR_CLASS_LIBRARIES_MODULES}/nanoFramework.Runtime.Native
 
             # target
             ${TARGET_BASE_LOCATION}

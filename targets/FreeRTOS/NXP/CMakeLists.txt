@@ -28,7 +28,7 @@ endif()
 # check if build was requested with a specifc FatFS version
 if(FATFS_VERSION_EMPTY)
     # no FatFS version actualy specified, must be empty which is fine, we'll default to a known good version
-    set(FATFS_VERSION_TAG "R0.14")
+    set(FATFS_VERSION_TAG "R0.14b")
 else()
     # set version 
     set(FATFS_VERSION_TAG "${FATFS_VERSION}")
@@ -137,7 +137,7 @@ if(USE_NETWORKING_OPTION)
 
     list(APPEND NANOCLR_PROJECT_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/_LwIP)
 
-    # append mbed TLS entropy generator, if hardware has it
+    # append Mbed TLS entropy generator, if hardware has it
     # if(NF_SECURITY_MBEDTLS AND USE_RNG)
     #     list(APPEND NANOCLR_PROJECT_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/mbedtls_entropy_hardware_pool.c")
     # endif()

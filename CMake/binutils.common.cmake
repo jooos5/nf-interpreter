@@ -298,7 +298,9 @@ function(nf_generate_bin_package file1 file2 offset outputfilename)
         ${file2} -Binary -offset 0x${offset}
         -o ${outputfilename} -Binary
 
-        WORKING_DIRECTORY ${TOOL_SRECORD_PREFIX} 
+        WORKING_DIRECTORY ${TOOL_SRECORD_PREFIX}
+
+        BYPRODUCTS ${CMAKE_BINARY_DIR}/${outputfilename}
 
         COMMENT "exporting hex files to one binary file" 
     )
@@ -578,10 +580,10 @@ macro(nf_setup_target_build_common)
 
     if(USE_SECURITY_MBEDTLS_OPTION AND NOT RTOS_ESP32_CHECK)
 
-        # mbedTLS requires setting a compiler definition in order to pass a config file
-        target_compile_definitions(mbedcrypto PUBLIC "-DMBEDTLS_CONFIG_FILE=\"${CMAKE_SOURCE_DIR}/src/PAL/COM/sockets/ssl/mbedTLS/nf_mbedtls_config.h\"")
+        # MbedTLS requires setting a compiler definition in order to pass a config file
+        target_compile_definitions(mbedcrypto PUBLIC "-DMBEDTLS_CONFIG_FILE=\"${CMAKE_SOURCE_DIR}/src/PAL/COM/sockets/ssl/MbedTLS/nf_mbedtls_config.h\"")
         
-        # need to add extra include directories for mbedTLS
+        # need to add extra include directories for MbedTLS
         target_include_directories(
             mbedcrypto PUBLIC
             ${CMAKE_SOURCE_DIR}/src/CLR/Include
@@ -589,7 +591,7 @@ macro(nf_setup_target_build_common)
             ${CMAKE_SOURCE_DIR}/src/PAL
             ${CMAKE_SOURCE_DIR}/src/PAL/Include
             ${CMAKE_SOURCE_DIR}/src/PAL/COM/sockets
-            ${CMAKE_SOURCE_DIR}/src/PAL/COM/sockets/ssl/mbedTLS
+            ${CMAKE_SOURCE_DIR}/src/PAL/COM/sockets/ssl/MbedTLS
             ${CMAKE_SOURCE_DIR}/src/DeviceInterfaces/Networking.Sntp
             ${CMAKE_SOURCE_DIR}/targets/${RTOS}/_include
             ${TARGET_BASE_LOCATION}/nanoCLR
@@ -672,3 +674,23 @@ macro(nf_clear_common_output_files_nanoclr)
     )
 
 endmacro()
+
+# function to check the path limit in Windows
+function(nf_check_path_limits)
+
+    # only need to check in Windows
+    if (WIN32)
+        set(FILESYSTEM_REG_PATH "HKLM\\SYSTEM\\CurrentControlSet\\Control\\FileSystem")
+        
+        cmake_host_system_information(RESULT WIN_LONG_PATH_OPTION QUERY WINDOWS_REGISTRY ${FILESYSTEM_REG_PATH} VALUE LongPathsEnabled)
+        if(${WIN_LONG_PATH_OPTION} EQUAL 0)
+            message(STATUS "******* WARNING ******\n\nWindows path limit is too short.\nPlease enable long paths in Windows registry.\nSee https://docs.microsoft.com/en-us/windows/win32/fileio/maximum-file-path-limitation?tabs=cmd#enable-long-paths-in-windows-10-version-1607-and-later\n\n")
+        
+            # try setting limits to overcome this 
+            set(CMAKE_OBJECT_PATH_MAX 260)
+            set(CMAKE_OBJECT_NAME_MAX 255)
+        endif()
+
+    endif()
+
+endfunction()

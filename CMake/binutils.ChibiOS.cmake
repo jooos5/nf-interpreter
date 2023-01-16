@@ -10,8 +10,8 @@ function(nf_set_optimization_options target)
     # debug compile options: -Og (optimize for debugging) and -ggdb (produce debug symbols specifically for gdb)
     target_compile_options(${target} PRIVATE
         $<$<CONFIG:Debug>:-Og -ggdb>
-        $<$<CONFIG:Release>:-O3 -flto -fuse-linker-plugin -fno-fat-lto-objects>
-        $<$<CONFIG:MinSizeRel>:-Os -flto>
+        $<$<CONFIG:Release>:-O3 -flto -ffat-lto-objects>
+        $<$<CONFIG:MinSizeRel>:-Os -flto -ffat-lto-objects>
         $<$<CONFIG:RelWithDebInfo>:-Os -ggdb>
     )
 
@@ -197,7 +197,7 @@ macro(nf_add_platform_dependencies target)
 
             add_dependencies(${target}.elf nano::NF_Network)
 
-            # security provider is mbedTLS
+            # security provider is MbedTLS
             if(USE_SECURITY_MBEDTLS_OPTION)
                 add_dependencies(NF_Network nano::NF_Network)
             endif()
@@ -248,7 +248,7 @@ macro(nf_add_platform_include_directories target)
                 
         if(USE_SECURITY_MBEDTLS_OPTION)
 
-            # need to add extra include directories for mbedTLS
+            # need to add extra include directories for MbedTLS
             target_include_directories(
                 mbedcrypto PUBLIC
                 ${CHIBIOS_HAL_INCLUDE_DIRS}

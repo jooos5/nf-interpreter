@@ -60,7 +60,8 @@ endif()
 # check if build was requested with a specifc AzureRTOS version
 if(RTOS_VERSION_EMPTY)
     # no AzureRTOS version actualy specified, must be empty which is fine, we'll default to a known good version
-    set(RTOS_VERSION "v6.1.12_rel")
+    # WHEN CHANGING THIS MAKE SURE TO UPDATE THE DEV CONTAINERS
+    set(RTOS_VERSION "v6.2.0_rel")
 endif()
 
 if(NO_AZURERTOS_SOURCE_FOLDER)
@@ -408,6 +409,9 @@ else()
     endif()
 
 endif()
+
+set(TARGET_BASE_LOCATION_BINARY ${CMAKE_CURRENT_BINARY_DIR}/${TARGET_VENDOR}/${TARGET_BOARD})
+set(TX_USER_FILE ${TARGET_BASE_LOCATION}/target_tx_user.h CACHE STRING "Enable TX user configuration")
 
 ##############################
 # AzureRTOS common directories

@@ -26,7 +26,7 @@ bool System_Device_IsLongRunningOperation(
     uint32_t readSize,
     bool fullDuplex,
     bool bufferIs16bits,
-    float byteTime,
+    int32_t byteTime,
     uint32_t &estimatedDurationMiliseconds)
 {
     if (bufferIs16bits)
@@ -277,7 +277,7 @@ HRESULT Library_sys_dev_spi_native_System_Device_Spi_SpiDevice::NativeOpenDevice
 {
     NANOCLR_HEADER();
 
-    uint32_t handle;
+    uint32_t handle = -1;
     SPI_DEVICE_CONFIGURATION spiConfig;
     CLR_RT_HeapBlock *config = NULL;
 
@@ -289,6 +289,7 @@ HRESULT Library_sys_dev_spi_native_System_Device_Spi_SpiDevice::NativeOpenDevice
     config = pThis[Library_sys_dev_spi_native_System_Device_Spi_SpiDevice::FIELD___connectionSettings].Dereference();
 
     spiConfig.BusMode = SpiBusMode_master;
+    spiConfig.DataIs16bits = false;
 
     // internally SPI bus ID is zero based, so better take care of that here
     spiConfig.Spi_Bus = config[SpiConnectionSettings::FIELD___busId].NumericByRef().s4 - 1;

@@ -7,7 +7,7 @@
 #ifndef NANOHAL_V2_H
 #define NANOHAL_V2_H
 
-#if !defined(_WIN32)
+#ifndef VIRTUAL_DEVICE
 
 // need to include stdlib.h **BEFORE** redefining malloc/free/realloc otherwise bad things happen
 #include <stdlib.h>
@@ -30,7 +30,7 @@
 #include "nanoHAL_Boot.h"
 #include <nanoVersion.h>
 
-#if defined(_WIN32)
+#if defined(VIRTUAL_DEVICE)
 #include <crtdbg.h>
 #endif
 
@@ -61,6 +61,8 @@ typedef enum SLEEP_LEVEL
 #define SYSTEM_EVENT_FLAG_COM_OUT      0x00000002
 #define SYSTEM_EVENT_FLAG_STORAGE_IO   0x00000004
 #define SYSTEM_EVENT_FLAG_SYSTEM_TIMER 0x00000010
+#define SYSTEM_EVENT_FLAG_USB_IN       0x00000020
+#define SYSTEM_EVENT_FLAG_USB_OUT      0x00000040
 //#define SYSTEM_EVENT_FLAG_TIMER1                    0x00000020
 //#define SYSTEM_EVENT_FLAG_TIMER2                    0x00000040
 //#define SYSTEM_EVENT_FLAG_BUTTON                    0x00000080
@@ -108,9 +110,9 @@ typedef enum SLEEP_LEVEL
 #define EVENT_RADIO                 80
 #define EVENT_HIGH_RESOLUTION_TIMER 90
 #define EVENT_BLUETOOTH             100
-
-#define EVENT_TOUCH   120
-#define EVENT_GESTURE 130
+#define EVENT_USB                   110
+#define EVENT_TOUCH                 120
+#define EVENT_GESTURE               130
 
 #define PAL_EVENT_TOUCH 0x1
 #define PAL_EVENT_KEY   0x2
@@ -273,7 +275,7 @@ extern "C"
 #define HAL_COMPLETION_IDLE_VALUE 0x0000FFFFFFFFFFFFull
 
 // provide platform dependent delay to CLR code
-#if defined(_WIN32)
+#if defined(VIRTUAL_DEVICE)
 #define OS_DELAY(milliSecs) ;
 #else
 #define OS_DELAY(milliSecs) PLATFORM_DELAY(milliSecs)
@@ -349,6 +351,10 @@ extern "C"
 #define CT_ASSERT_UNIQUE_NAME(e, name) typedef char __CT_ASSERT__##name[(e) ? 1 : -1];
 #define CT_ASSERT(e)                   CT_ASSERT_UNIQUE_NAME(e, nanoclr)
 #endif
+
+// developer note: if "size of something" needs to be output at compile time use this
+// char checker(int);
+// char checkSizeOfWhathever[sizeof(CLR_RT_HeapBlock)] = {checker(&checkSizeOfWhathever)};
 
 #ifdef __cplusplus
 extern "C"
